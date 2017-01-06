@@ -1,0 +1,26 @@
+batting <- read.csv("Batting.csv")
+str(batting)
+head( batting [1:5, 'AB'])
+head(batting$X2B)
+library(dplyr)
+batting$BA <- batting$H/batting$AB 
+tail(batting$BA,5)
+batting$OBP <- (batting$H + batting$BB + batting$HBP)/(batting$AB + batting$BB +batting$HBP +batting$SF)
+batting$X1B <- batting$H - batting$X2B - batting$X3B - batting$HR 
+batting$SLG <- (batting$X1B + 2*batting$X2B + 3*batting$X3B + 4*batting$HR)/batting$AB
+salaries <- read.csv("Salaries.csv")
+batting <-subset(batting, yearID>= 1985 )
+summary(batting)
+combo <- merge(batting, salaries, by= c('playerID', 'yearID'))
+lost_players <- subset(combo, playerID %in% c('giambja01','damonjo01','saenzol01'))
+lost_players <- subset(lost_players, yearID==2001)
+lost_players <- lost_players[,c('playerID','H','X2B','X3B','HR','OBP','SLG','BA','AB')]
+combo <- subset(combo, yearID==2001)
+shortlist <- filter(combo, OBP >= 0.3638687 , AB >= 489.6667)
+slcheck <- subset(combo, OBP >= 0.3638687)
+slcheck <- subset (slcheck, AB >= 489.6667)
+head(slcheck)
+shortlist <- select(shortlist, playerID, OBP, AB , salary)
+head(shortlist)
+final <- arrange(shortlist, salary)
+head(final)
